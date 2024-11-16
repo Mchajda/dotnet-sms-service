@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnet-sms-service", "dotnet-sms-service\dotnet-sms-service.csproj", "{83DCAFFB-2BC4-4732-9DBC-B54834B1CD8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-sms-service", "dotnet-sms-service\dotnet-sms-service.csproj", "{83DCAFFB-2BC4-4732-9DBC-B54834B1CD8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnet-sms-service-tests", "dotnet-sms-service-tests\dotnet-sms-service-tests.csproj", "{073919D9-5F64-4FE4-8F7E-31A9133946D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{83DCAFFB-2BC4-4732-9DBC-B54834B1CD8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83DCAFFB-2BC4-4732-9DBC-B54834B1CD8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83DCAFFB-2BC4-4732-9DBC-B54834B1CD8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{073919D9-5F64-4FE4-8F7E-31A9133946D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{073919D9-5F64-4FE4-8F7E-31A9133946D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{073919D9-5F64-4FE4-8F7E-31A9133946D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{073919D9-5F64-4FE4-8F7E-31A9133946D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

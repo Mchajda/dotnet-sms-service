@@ -1,5 +1,6 @@
 using dotnet_sms_service.Models;
 using dotnet_sms_service.Models.Configurations;
+using dotnet_sms_service.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -13,17 +14,17 @@ namespace dotnet_sms_service.Functions
     {
         private readonly ILogger _logger;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly SmsApiConfiguration _smsApiConfiguration;
+        private readonly ISmsService _smsService;
 
         public CreateSmsNotifications(
             ILoggerFactory loggerFactory,
             IHttpClientFactory httpClientFactory,
-            IOptions<SmsApiConfiguration> smsApiOptions
+            ISmsService smsService
         )
         {
             _logger = loggerFactory.CreateLogger<CreateSmsNotifications>();
             _httpClientFactory = httpClientFactory;
-            _smsApiConfiguration = smsApiOptions.Value;
+            _smsService = smsService;
         }
 
         [Function("Function1")]
@@ -42,7 +43,7 @@ namespace dotnet_sms_service.Functions
 
                 foreach (Visit visit in deserializedVisits.Data)
                 {
-                    SendSms(visit);
+                    var response = _smsService.SendSms(visit);
                 }
             }
 
@@ -50,27 +51,6 @@ namespace dotnet_sms_service.Functions
             {
                 _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
             }
-        }
-
-        private void SendSms(Visit visit)
-        {
-            try
-            {
-                IClient client = new ClientOAuth(_smsApiConfiguration.SmsApiToken);
-
-                var smsApi = new SMSFactory(client, new ProxyHTTP(_smsApiConfiguration.SmsApiUrl));
-
-                var result =
-                    smsApi.ActionSend()
-                        .SetText("SMSAPI says hi!")
-                        .SetTo(ParsePhoneNumber(visit.Customer.PhoneNumber))
-                        .SetSender("Test")
-                        .Execute();
-            }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
+        }        
     }
 }
