@@ -2,7 +2,7 @@
 {
     public class ApiConnectionSettings
     {
-        public string ApiUrl { get; set; }
-        public string ApiKey { get; set; }
+        public required string ApiUrl { get; set; }
+        public required string ApiKey { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.Services.Configure<ApiConnectionSettings>(builder.Configuration.GetSection("ApiSettings"));
+builder.Services.Configure<SmsApiConfiguration>(builder.Configuration.GetSection("SmsApi"));
 builder.ConfigureFunctionsWebApplication();
 
 builder.Services.AddHttpClient("sms-api-client", (serviceProvider, client) =>

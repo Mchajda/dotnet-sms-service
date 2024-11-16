@@ -2,7 +2,7 @@
 {
     public class ApiResponse
     {
-        public List<Visit> Data { get; set; }
+        public required List<Visit> Data { get; set; }
     }
     public class Visit
     {
