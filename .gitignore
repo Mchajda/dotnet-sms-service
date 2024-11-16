@@ -1,2 +1,3 @@
-
 .vs/
+dotnet-sms-service-tests/obj/
+dotnet-sms-service-tests/bin/

@@ -67,27 +67,10 @@ namespace dotnet_sms_service.Functions
                         .SetSender("Test")
                         .Execute();
             }
-            catch (ActionException e)
+            catch (System.Exception ex)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(ex.Message);
             }
-            catch (ClientException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            catch (HostException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            catch (ProxyException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-
-        private string ParsePhoneNumber(string phoneNumber)
-        {
-            throw new NotImplementedException();
         }
     }
 }
