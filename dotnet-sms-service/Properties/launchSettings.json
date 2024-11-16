@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "dotnet_sms_service": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7259",
+      "launchBrowser": false
+    }
+  }
+}
