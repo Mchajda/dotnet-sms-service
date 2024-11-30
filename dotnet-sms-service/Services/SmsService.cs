@@ -10,7 +10,7 @@ namespace dotnet_sms_service.Services
         public string ParsePhoneNumber(string phoneNumber);
         public SMSApi.Api.Response.Status SendSms(Visit visit);
     }
-    public class SmsService
+    public class SmsService : ISmsService
     {
         private readonly SmsApiConfiguration _smsApiConfiguration;
         public SmsService(
@@ -41,7 +41,7 @@ namespace dotnet_sms_service.Services
 
                 response =
                     smsApi.ActionSend()
-                        .SetText("SMSAPI says hi!")
+                        .SetText($"Tu Czar Psa, przypominamy o jutrzejszej wizycie - {visit.StartDate}")
                         .SetTo(ParsePhoneNumber(visit.Customer.PhoneNumber))
                         .SetSender("Test")
                         .Execute();

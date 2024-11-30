@@ -1,4 +1,5 @@
 using dotnet_sms_service.Models.Configurations;
+using dotnet_sms_service.Services;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,9 +9,12 @@ var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.Services.Configure<ApiConnectionSettings>(builder.Configuration.GetSection("ApiSettings"));
 builder.Services.Configure<SmsApiConfiguration>(builder.Configuration.GetSection("SmsApi"));
+
+builder.Services.AddTransient<ISmsService, SmsService>();
+
 builder.ConfigureFunctionsWebApplication();
 
-builder.Services.AddHttpClient("sms-api-client", (serviceProvider, client) =>
+builder.Services.AddHttpClient("groomer-backend-client", (serviceProvider, client) =>
 {
     var apiSettings = serviceProvider.GetRequiredService<IOptions<ApiConnectionSettings>>().Value;
     client.BaseAddress = new Uri(apiSettings.ApiUrl);
