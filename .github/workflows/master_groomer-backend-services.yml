@@ -30,7 +30,7 @@ jobs:
           echo "Current Directory:"
           pwd
           echo "Files in the Current Directory:"
-          ls -al
+          ls -a
 
       - name: 'Build the Project'
         run: |
