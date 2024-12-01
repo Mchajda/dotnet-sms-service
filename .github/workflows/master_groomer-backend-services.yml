@@ -25,13 +25,6 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Verify Project Structure
-        run: |
-          echo "Current Directory:"
-          pwd
-          echo "Files in the Current Directory:"
-          ls -a
-
       - name: 'Build the Project'
         run: |
           dotnet build ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/dotnet-sms-service.csproj \
