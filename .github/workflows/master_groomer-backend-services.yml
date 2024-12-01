@@ -26,10 +26,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: 'Build the Project'
-        run: |
-          dotnet build ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/dotnet-sms-service.csproj \
-            --configuration Release \
-            --output ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output
+        run: dotnet build ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/dotnet-sms-service.csproj --configuration Release --output ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output
 
       - name: Login to Azure
         uses: azure/login@v2
