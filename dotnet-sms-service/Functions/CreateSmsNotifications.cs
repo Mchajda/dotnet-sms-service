@@ -27,7 +27,7 @@ namespace dotnet_sms_service.Functions
         }
 
         [Function("Function1")]
-        public async Task Run([TimerTrigger("0 16 11 * * *", RunOnStartup = true)] TimerInfo myTimer)
+        public async Task Run([TimerTrigger("0 16 11 * * *")] TimerInfo myTimer)
         {
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
