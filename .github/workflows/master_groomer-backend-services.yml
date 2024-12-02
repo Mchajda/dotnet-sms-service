@@ -1,9 +1,9 @@
-name: Build and deploy dotnet core app to Azure Function App - dotnet-sms-service
+name: Build and Deploy .NET Azure Function App - groomer-backend-services
 
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 env:
@@ -14,26 +14,52 @@ jobs:
   build-and-deploy:
     runs-on: windows-latest
     permissions:
-      id-token: write # Required for requesting the JWT
+      id-token: write # Required for JWT authentication
 
     steps:
+      # Checkout the code from the repository
       - name: 'Checkout Repository'
         uses: actions/checkout@v4
 
-      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+      # Set up the .NET environment
+      - name: Setup .NET Environment
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: 'Build the Project'
-        run: dotnet build ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/dotnet-sms-service.csproj --configuration Release --output ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output
+      # Verify the file structure (for debugging if necessary)
+      - name: Verify Project Structure
+        run: |
+          echo "Current Directory:"
+          pwd
+          echo "Files in the Current Directory:"
+          echo "Solution File:"
+          cat dotnet-sms-service.sln
 
-      - name: Setup Azure CLI
-        uses: azure/CLI@v1
+      # Restore dependencies and build the project
+      - name: Build the Azure Functions Project
+        run: |
+          dotnet build ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/dotnet-sms-service.csproj \
+            --configuration Release \
+            --output ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output
 
-      - name: Login with Azure CLI
-        run: az login --service-principal -u ${{ secrets.AZUREAPPSERVICE_CLIENTID }} -p ${{ secrets.AZUREAPPSERVICE_CLIENTSECRET }} --tenant ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+      # Login to Azure using Service Principal
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+          client-secret: ${{ secrets.AZUREAPPSERVICE_CLIENTSECRET }}
 
+      # Add environment variables (e.g., testKey)
+      - name: Set Environment Variables for Azure Function
+        run: |
+          az functionapp config appsettings set \
+            --name groomer-backend-services \
+            --settings "testKey=xyz"
+
+      # Deploy the Azure Functions App
       - name: Deploy to Azure Function App
         uses: Azure/functions-action@v1
         with:
