@@ -45,9 +45,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F367B9E4E89747FF88AA8FBF96652516 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2C916FAB46B344DAA041B689758D3223 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C715728DE4224062968DE127AEEC4CBA }}
           client-secret: ${{ secrets.AZUREAPPSERVICE_CLIENTSECRET }}
 
       # Add environment variables (e.g., testKey)
