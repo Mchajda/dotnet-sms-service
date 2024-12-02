@@ -1,64 +1,37 @@
-name: Build and Deploy .NET Azure Function App - groomer-backend-services
+name: Deploy DotNet project to Azure Function App
 
 on:
   push:
-    branches:
-      - master
-  workflow_dispatch:
+    branches: ["master"]
 
 env:
+  AZURE_FUNCTIONAPP_NAME: 'groomer-backend-services'
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'dotnet-sms-service'
   DOTNET_VERSION: '8.0.x'
 
 jobs:
   build-and-deploy:
     runs-on: windows-latest
-    permissions:
-      id-token: write # Required for JWT authentication
-
     steps:
-      # Checkout the code from the repository
-      - name: 'Checkout Repository'
-        uses: actions/checkout@v4
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v4
 
-      # Set up the .NET environment
-      - name: Setup .NET Environment
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+    - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # Verify the file structure (for debugging if necessary)
-      - name: Verify Project Structure
-        run: |
-          echo "Current Directory:"
-          pwd
-          echo "Files in the Current Directory:"
-          echo "Solution File:"
-          cat dotnet-sms-service.sln
+    - name: 'Resolve Project Dependencies Using Dotnet'
+      shell: pwsh
+      run: |
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        dotnet build --configuration Release --output ./output
+        popd
 
-      # Restore dependencies and build the project
-      - name: Build the Azure Functions Project
-        run: |
-          dotnet build ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/dotnet-sms-service.csproj --configuration Release --output ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output
-
-      # Login to Azure using Service Principal
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F367B9E4E89747FF88AA8FBF96652516 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2C916FAB46B344DAA041B689758D3223 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C715728DE4224062968DE127AEEC4CBA }}
-          client-secret: ${{ secrets.AZUREAPPSERVICE_CLIENTSECRET }}
-
-      # Add environment variables (e.g., testKey)
-      - name: Set Environment Variables for Azure Function
-        run: |
-          az functionapp config appsettings set --name groomer-backend-services --settings "testKey=xyz"
-
-      # Deploy the Azure Functions App
-      - name: Deploy to Azure Function App
-        uses: Azure/functions-action@v1
-        with:
-          app-name: 'groomer-backend-services'
-          slot-name: 'Production'
-          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: fa
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
