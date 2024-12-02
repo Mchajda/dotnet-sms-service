@@ -3,7 +3,7 @@ name: Build and Deploy .NET Azure Function App - groomer-backend-services
 on:
   push:
     branches:
-      - main
+      - master
   workflow_dispatch:
 
 env:
