@@ -27,6 +27,19 @@ jobs:
         pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
         dotnet build --configuration Release --output ./output
         popd
+    
+    - name: 'Fetch Secrets from Key Vault'
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          SMS_API_TOKEN=$(az keyvault secret show --name "SmsApiToken" --vault-name ${{ env.AZURE_KEYVAULT_NAME }} --query value -o tsv)
+          GROOMER_BACKEND_API_KEY=$(az keyvault secret show --name "GroomerBackendApiKey" --vault-name ${{ env.AZURE_KEYVAULT_NAME }} --query value -o tsv)
+
+          az functionapp config appsettings set 
+            --name ${{ env.AZURE_FUNCTIONAPP_NAME }} 
+            --settings 
+              "SmsApi:SmsApiToken=$SMS_API_TOKEN" 
+              "ApiSettings:ApiKey=$GROOMER_BACKEND_API_KEY"
 
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
